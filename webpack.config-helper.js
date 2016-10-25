@@ -5,9 +5,21 @@ const Webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ExtractSASS = new ExtractTextPlugin('styles/bundle.css');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 
+/*
+ * options can be configured in webpack-{env}.config.js
+ *  Option values are:
+ *    - isProduction: Boolean
+ *    - devtool: String
+ *    - port: Number
+ */
 module.exports = (options) => {
 
+  /*
+   * Base webpack configuration
+   * Other options will be added depending if we are running in production or not
+   */
   let webpackConfig = {
     devtool: options.devtool,
     entry: [
@@ -41,9 +53,12 @@ module.exports = (options) => {
     }
   };
 
-  if (options.isProduction) {
+  if (options.isProduction) {      // PRODUCTION WEBPACK CONFIGURATION
+
+    // set entry point
     webpackConfig.entry = ['./src/scripts/index'];
 
+    // add plugins
     webpackConfig.plugins.push(
       new Webpack.optimize.OccurenceOrderPlugin(),
       new Webpack.optimize.UglifyJsPlugin({
@@ -54,25 +69,34 @@ module.exports = (options) => {
       ExtractSASS
     );
 
+    // add loaders
     webpackConfig.module.loaders.push({
       test: /\.scss$/i,
       loader: ExtractSASS.extract(['css', 'sass'])
     });
 
-  } else {
+  } else {                         // DEV WEBPACK CONFIGURATION
+
+    // add webpack plugins
     webpackConfig.plugins.push(
-      new Webpack.HotModuleReplacementPlugin()
+      new Webpack.HotModuleReplacementPlugin(),
+      new LiveReloadPlugin({
+        appendScriptTag: true
+      })
     );
 
+    // add loaders
     webpackConfig.module.loaders.push({
-      test: /\.scss$/i,
-      loaders: ['style', 'css', 'sass']
-    }, {
-      test: /\.js$/,
-      loader: 'eslint',
-      exclude: /node_modules/
-    });
+        test: /\.scss$/i,
+        loaders: ['style', 'css', 'sass']
+      }, {
+        test: /\.js$/,
+        loader: 'eslint',
+        exclude: /node_modules/
+      }
+    );
 
+    // configure webpack dev server
     webpackConfig.devServer = {
       contentBase: './dist',
       hot: true,
@@ -80,6 +104,7 @@ module.exports = (options) => {
       inline: true,
       progress: true
     };
+
   }
 
   return webpackConfig;
