@@ -1,0 +1,25 @@
+// Breakpoint VARS
+// =====================
+$breakpoints: (
+    small:      480,
+    med:        768,
+    lg:         1024
+);
+
+// COLOR VARS
+// =====================
+$colors: (
+    primary:    #3a72b5,
+    secondary:  #00adec,
+    danger:     #f53d3d,
+    light:      #f4f4f4,
+    mid:        #ccc,
+    dark:       #222
+);
+
+// FONT VARS
+// =====================
+$fonts: (
+    primary:    #{Helvetica, Arial, sans-serif},
+    secondary:  #{serif}
+);

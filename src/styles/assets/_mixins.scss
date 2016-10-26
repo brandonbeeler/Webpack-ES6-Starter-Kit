@@ -1,0 +1,86 @@
+// Breakpoint Mixins
+// =====================
+@mixin respond($bp, $determinate: min, $direction: width) {
+    @media screen and (#{$determinate}-#{$direction}: $bp) { @content; }
+}
+@mixin respondBetween($min, $max) {
+    @media screen and (min-width: #{$min}) and (max-width: #{$max}) { @content; }
+}
+
+// Typographic Mixins
+// =====================
+@mixin font-size($size: 16) {
+    font-size: #{$size}px;
+    //  $em: $size / 10;
+    //  font-size: #{$em}rem;
+}
+
+@mixin font-style($size: '', $color: '', $weight: '', $style: '', $decoration: '', $family: '') {
+    @if ($family != '') {
+        font-family: $family;
+    }
+
+    @if ($size != '') {
+        @include font-size($size);
+    }
+
+    @if ($color != '') {
+        color: $color;
+    }
+
+    @if ($weight != '') {
+        font-weight: $weight;
+    }
+
+    @if ($style != '') {
+        font-style: $style;
+    }
+
+    @if ($decoration != '') {
+        text-decoration: $decoration;
+    }
+}
+
+@mixin button($bgcolor: color(primary), $textcolor: #fff, $font-size: 20) {
+    background: $bgcolor;
+    display: inline-block;
+    padding: 10px 40px;
+    @include font-style($font-size, $textcolor, 700);
+    transition: background .25s;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+        background: $bgcolor - 15;
+        cursor: pointer;
+    }
+}
+
+// Map Functions
+// =====================
+@function color($key) {
+    @if map-has-key($colors, $key) {
+        @return map-get($colors, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $colors.";
+    @return null;
+}
+
+@function breakpoint($key) {
+    @if map-has-key($breakpoints, $key) {
+        @return map-get($breakpoints, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $breakpoints.";
+    @return null;
+}
+
+@function font($key) {
+    @if map-has-key($fonts, $key) {
+        @return map-get($fonts, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $fonts.";
+    @return null;
+}
