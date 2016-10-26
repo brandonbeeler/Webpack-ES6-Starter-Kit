@@ -17,12 +17,12 @@ h1 {
 }
 
 h2 {
-    @include font-style(16, color(primary));
+    @include font-style(24, color(primary));
     text-transform: uppercase;
 }
 
 h3 {
-    @include font-style(24, color(primary));
+    @include font-style(21, color(primary));
 }
 
 h4 {
